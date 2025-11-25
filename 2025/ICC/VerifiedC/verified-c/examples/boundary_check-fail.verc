@@ -1,0 +1,10 @@
+func(arr: array, i: int) -> int {
+    if (i = len(arr) - 1) {
+        let temp = arr[i];
+        return temp;
+    } else {
+        return 0;
+    }
+}
+EOF
+{"arr": [1, 2, 3], "i": 2}

@@ -1,0 +1,8 @@
+services:
+  verified-array:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "12100:12100"
+    privileged: true

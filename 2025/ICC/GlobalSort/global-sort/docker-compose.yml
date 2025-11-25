@@ -1,0 +1,9 @@
+services:
+  global-sort:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3131:3131"
+    privileged: true
+    env_file: .env

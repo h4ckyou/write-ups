@@ -1,0 +1,21 @@
+func(arr : array, i : int)->int
+{
+    if (i < 2) {
+        return i;
+    } else {
+        if (i < len(arr)) {
+            let temp = arr[i];
+            if (temp = 0) {
+                let val = func(arr, i - 1) + func(arr, i - 2);
+                arr[i] = val;
+                return val;
+            } else {
+                return temp;
+            }
+        } else {
+            return func(arr, i - 1) + func(arr, i - 2);
+        }
+    }
+}
+EOF
+{"arr" : [ 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], "i" : 10}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="8dp" android:layout_marginTop="4dp" android:layout_marginRight="8dp" android:layout_marginBottom="2dp" app:cardCornerRadius="8dp" app:cardElevation="4dp">
+    <LinearLayout android:orientation="vertical" android:padding="12dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TextView android:textSize="16sp" android:textColor="@android:color/black" android:id="@+id/transactionName" android:layout_width="0dp" android:layout_height="wrap_content" android:text="Transaction Name" android:layout_weight="1"/>
+            <ImageView android:id="@+id/transactionIcon" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/up_arrow" android:contentDescription="Transaction Icon" android:layout_marginStart="8dp"/>
+        </LinearLayout>
+        <TextView android:textSize="12sp" android:textColor="@android:color/darker_gray" android:id="@+id/transactionDate" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Date"/>
+        <TextView android:textSize="16sp" android:textColor="@android:color/black" android:gravity="end" android:id="@+id/transactionAmount" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="-11dp" android:text="$0.00"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

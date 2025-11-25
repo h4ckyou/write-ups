@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:id="@+id/main" android:background="@color/white" android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageView android:id="@+id/imageView" android:layout_width="412dp" android:layout_height="500dp" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0" app:srcCompat="@drawable/minion"/>
+    <TextView android:textSize="16sp" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Look into me my Banana Value is interesting" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0" app:layout_constraintVertical_bias="0.936"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

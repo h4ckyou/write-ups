@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:id="@+id/main" android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@+id/linearLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="15dp" app:layout_constraintTop_toTopOf="0">
+        <ImageView android:id="@+id/backIcon" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/back" android:contentDescription="Transaction Icon" android:layout_marginStart="10dp" android:layout_marginEnd="10dp"/>
+        <TextView android:textSize="18sp" android:textStyle="bold" android:textColor="@android:color/black" android:id="@+id/transactions" android:layout_width="0dp" android:layout_height="wrap_content" android:text="Notifications" android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout android:orientation="vertical" android:id="@+id/notification" android:background="@drawable/transaction_layout" android:padding="12dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="10dp" android:layout_marginTop="24dp" android:layout_marginRight="10dp" app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TextView android:textSize="16sp" android:textColor="@android:color/black" android:id="@+id/name" android:layout_width="0dp" android:layout_height="wrap_content" android:text="Server Side" android:layout_weight="1"/>
+        </LinearLayout>
+        <TextView android:textSize="12sp" android:textColor="@color/teal_200" android:gravity="start" android:id="@+id/details" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="Have you analyzed the server&apos;s response when handling OTP requests?"/>
+    </LinearLayout>
+    <LinearLayout android:orientation="vertical" android:background="@drawable/transaction_layout" android:padding="12dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="10dp" android:layout_marginTop="5dp" android:layout_marginRight="10dp" app:layout_constraintTop_toBottomOf="@+id/notification">
+        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TextView android:textSize="16sp" android:textColor="@android:color/black" android:id="@+id/name_01" android:layout_width="0dp" android:layout_height="wrap_content" android:text="Transactions" android:layout_weight="1"/>
+        </LinearLayout>
+        <TextView android:textSize="12sp" android:textColor="@color/teal_200" android:gravity="start" android:id="@+id/detail_01" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="Investigate the transaction history for unusual data."/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

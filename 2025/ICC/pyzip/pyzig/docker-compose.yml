@@ -1,0 +1,8 @@
+services:
+  pyzig:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "6101:6101"
+    privileged: true
