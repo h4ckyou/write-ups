@@ -1,0 +1,12 @@
+service prob
+{
+	disable	= no
+	flags	= REUSE
+	socket_type	= stream
+	protocol = tcp
+	wait = no
+	user = dirty_stack
+	server = /home/dirty_stack/run.sh
+	type = UNLISTED
+	port = 8080
+}

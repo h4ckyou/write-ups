@@ -1,0 +1,8 @@
+version: "3"
+services:
+  h2beat:
+    build:
+      context: ./
+    ports:
+       -  "10912:10912"
+    restart: always

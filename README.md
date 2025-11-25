@@ -1,7 +1,15 @@
-# write-ups
+# Write-ups
 
-Various write-ups from various CTFs..
+A collection of write-ups from various Capture The Flag (CTF) competitions.
 
-Mostly will contain pwn and reverse engineering.
+I mainly focus on `pwn` and `reverse engineering`, so most of the content revolves around it.
 
-This is an attempt to organize my solutions and files from CTF i participate in.
+This repository serves as a way for me to organize my solutions, notes, and files from the CTFs I participate in, as well as challenges I practice on.
+
+# Structure
+
+- practice/ — challenges I work on during my free time (solved or still in progress)
+
+- misc/ — miscellaneous content not directly related to pwn or reversing
+
+- 202(3|4|5) — solve scripts, notes, binaries, and write-ups from CTFs I’ve participated in

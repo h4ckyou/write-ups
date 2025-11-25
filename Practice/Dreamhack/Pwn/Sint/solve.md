@@ -1,0 +1,4 @@
+- to trigger overflow we need to make use of the fact that it does read(0, buf, size - 1)
+- due to size being of type signed int and the third param to read is size_t, if we pass in 0 then it evals to 0-1=0xffffffff which when casted as an unsigned int gives a really large number
+- with that we can trigger the overflow
+- profilt
