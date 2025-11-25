@@ -1,2 +1,2 @@
 # write-ups
-Write-ups for various CTF 
+Write-ups for various CTFs...
