@@ -9,8 +9,6 @@ Mostly will contain pwn and reverse engineering.
 <details>
   <summary><strong>ROP Challenges</strong></summary>
 
-### ROP Emporium
-
   - **0CTF TCTF 2022** --> babyheap
     * [write-up](https://github.com/)
     > *seccomp in place, heap overflow due to type confusion,  do chunk overlap for leak, then two tcache poisonning attacks*<br>
