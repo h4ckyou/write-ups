@@ -8,8 +8,8 @@ This repository serves as a way for me to organize my solutions, notes, and file
 
 # Structure
 
-- practice/ — challenges I work on during my free time (solved or still in progress)
+- practice/ - challenges I work on during my free time (solved or still in progress)
 
-- misc/ — miscellaneous content not directly related to pwn or reversing
+- misc/ - miscellaneous content not directly related to pwn or reversing
 
-- 202(3|4|5) — solve scripts, notes, binaries, and write-ups from CTFs I’ve participated in
+- 202(3|4|5) - solve scripts, notes, binaries, and write-ups from CTFs I’ve participated in
