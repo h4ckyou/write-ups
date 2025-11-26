@@ -13,3 +13,11 @@ This repository serves as a way for me to organize my solutions, notes, and file
 - misc/ - miscellaneous content not directly related to pwn or reversing
 
 - 202(3|4|5) - solve scripts, notes, binaries, and write-ups from CTFs I’ve participated in
+
+# Index
+
+As time goes on I'll index my scripts inorder to ease access to certain techniques
+
+<details>
+  <summary><strong>Heap Challenges</strong></summary>
+</details>
