@@ -1,0 +1,454 @@
+{
+  "categories": [
+    {
+      "name": "Control Flow",
+      "colour": "#d29922",
+      "blocks": ["label", "nop", "jmp", "call", "ret", "je", "jne", "jg", "jl", "jge", "jle", "jz", "jnz", "loop", "cmp", "test"]
+    },
+    {
+      "name": "Data Movement",
+      "colour": "#56d364", 
+      "blocks": ["mov_reg_imm", "mov_reg_reg", "mov_reg_mem", "mov_mem_reg", "movzx", "movsx", "lea", "xchg", "mov_eax_imm", "mov_al_imm", "mov_edi_imm", "mov_esi_imm", "mov_edx_imm", "mov_edi_eax", "mov_rsi_rsp", "mov_rdx_rax", "mov_al_0"]
+    },
+    {
+      "name": "Stack Operations",
+      "colour": "#56d364",
+      "blocks": ["push_reg", "push_imm", "pop", "enter", "leave", "pop_rdi"]
+    },
+    {
+      "name": "Arithmetic",
+      "colour": "#58a6ff",
+      "blocks": ["add", "sub", "inc", "dec", "neg", "mul", "imul", "div", "idiv", "cqo", "xor_eax", "xor_edi"]
+    },
+    {
+      "name": "Logical & Bitwise",
+      "colour": "#58a6ff",
+      "blocks": ["and", "or", "xor", "not", "shl", "shr", "sal", "sar", "rol", "ror"]
+    },
+    {
+      "name": "Data Definition",
+      "colour": "#56d364",
+      "blocks": [".byte", ".word", ".long", ".quad", ".ascii"]
+    },
+    {
+      "name": "System",
+      "colour": "#8b5cf6",
+      "blocks": ["syscall", "int"]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "label",
+      "template": "{N}:",
+      "fields": {"N": "string"},
+      "json": {"type": "label", "message0": "%1:", "args0": [{"type": "field_input", "name": "N", "text": ""}], "previousStatement": null, "nextStatement": null, "tooltip": "Define a label for jumps and calls"}
+    },
+    {
+      "type": "nop", 
+      "template": "nop",
+      "fields": {},
+      "json": {"type": "nop", "message0": "nop", "args0": [], "previousStatement": null, "nextStatement": null, "tooltip": "No operation - does nothing"}
+    },
+    {
+      "type": "jmp",
+      "template": "jmp {A}",
+      "fields": {"A": "string"},
+      "json": {"type": "jmp", "message0": "jmp %1", "args0": [{"type": "field_input", "name": "A", "text": "label"}], "previousStatement": null, "nextStatement": null, "tooltip": "Unconditional jump to label"}
+    },
+    {
+      "type": "call",
+      "template": "call {A}",
+      "fields": {"A": "string"},
+      "json": {"type": "call", "message0": "call %1", "args0": [{"type": "field_input", "name": "A", "text": "func"}], "previousStatement": null, "nextStatement": null, "tooltip": "Call function (pushes return address)"}
+    },
+    {
+      "type": "ret",
+      "template": "ret",
+      "fields": {},
+      "json": {"type": "ret", "message0": "ret", "args0": [], "previousStatement": null, "nextStatement": null, "tooltip": "Return from function call"}
+    },
+    {
+      "type": "je",
+      "template": "je {A}",
+      "fields": {"A": "string"},
+      "json": {"type": "je", "message0": "je %1", "args0": [{"type": "field_input", "name": "A", "text": "equal"}], "previousStatement": null, "nextStatement": null, "tooltip": "Jump if equal (ZF=1)"}
+    },
+    {
+      "type": "jne",
+      "template": "jne {A}",
+      "fields": {"A": "string"},
+      "json": {"type": "jne", "message0": "jne %1", "args0": [{"type": "field_input", "name": "A", "text": "not_equal"}], "previousStatement": null, "nextStatement": null, "tooltip": "Jump if not equal (ZF=0)"}
+    },
+    {
+      "type": "jg",
+      "template": "jg {A}",
+      "fields": {"A": "string"},
+      "json": {"type": "jg", "message0": "jg %1", "args0": [{"type": "field_input", "name": "A", "text": "greater"}], "previousStatement": null, "nextStatement": null, "tooltip": "Jump if greater (signed)"}
+    },
+    {
+      "type": "jl",
+      "template": "jl {A}",
+      "fields": {"A": "string"},
+      "json": {"type": "jl", "message0": "jl %1", "args0": [{"type": "field_input", "name": "A", "text": "less"}], "previousStatement": null, "nextStatement": null, "tooltip": "Jump if less (signed)"}
+    },
+    {
+      "type": "jge",
+      "template": "jge {A}",
+      "fields": {"A": "string"},
+      "json": {"type": "jge", "message0": "jge %1", "args0": [{"type": "field_input", "name": "A", "text": "ge"}], "previousStatement": null, "nextStatement": null, "tooltip": "Jump if greater or equal (signed)"}
+    },
+    {
+      "type": "jle",
+      "template": "jle {A}",
+      "fields": {"A": "string"},
+      "json": {"type": "jle", "message0": "jle %1", "args0": [{"type": "field_input", "name": "A", "text": "le"}], "previousStatement": null, "nextStatement": null, "tooltip": "Jump if less or equal (signed)"}
+    },
+    {
+      "type": "jz",
+      "template": "jz {A}",
+      "fields": {"A": "string"},
+      "json": {"type": "jz", "message0": "jz %1", "args0": [{"type": "field_input", "name": "A", "text": "zero"}], "previousStatement": null, "nextStatement": null, "tooltip": "Jump if zero (ZF=1) - same as je"}
+    },
+    {
+      "type": "jnz",
+      "template": "jnz {A}",
+      "fields": {"A": "string"},
+      "json": {"type": "jnz", "message0": "jnz %1", "args0": [{"type": "field_input", "name": "A", "text": "nz"}], "previousStatement": null, "nextStatement": null, "tooltip": "Jump if not zero (ZF=0) - same as jne"}
+    },
+    {
+      "type": "loop",
+      "template": "loop {A}",
+      "fields": {"A": "string"},
+      "json": {"type": "loop", "message0": "loop %1", "args0": [{"type": "field_input", "name": "A", "text": "start"}], "previousStatement": null, "nextStatement": null, "tooltip": "Decrement rcx, jump if rcx != 0"}
+    },
+    {
+      "type": "cmp",
+      "template": "cmp {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "cmp", "message0": "cmp %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "0"}], "previousStatement": null, "nextStatement": null, "tooltip": "Compare operands and set flags (D - S)"}
+    },
+    {
+      "type": "test",
+      "template": "test {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "test", "message0": "test %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "rax"}], "previousStatement": null, "nextStatement": null, "tooltip": "Logical AND and set flags (operands unchanged)"}
+    },
+
+    {
+      "type": "mov_reg_imm",
+      "template": "mov {D},{I}",
+      "fields": {"D": "string", "I": "string"},
+      "json": {"type": "mov_reg_imm", "message0": "mov %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "I", "text": "0"}], "previousStatement": null, "nextStatement": null, "tooltip": "Move immediate value to register"}
+    },
+    {
+      "type": "mov_reg_reg",
+      "template": "mov {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "mov_reg_reg", "message0": "mov %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "rbx"}], "previousStatement": null, "nextStatement": null, "tooltip": "Move register to register"}
+    },
+    {
+      "type": "mov_reg_mem",
+      "template": "mov {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "mov_reg_mem", "message0": "mov %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "[rbp]"}], "previousStatement": null, "nextStatement": null, "tooltip": "Move memory contents to register"}
+    },
+    {
+      "type": "mov_mem_reg",
+      "template": "mov {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "mov_mem_reg", "message0": "mov %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "[rbp]"}, {"type": "field_input", "name": "S", "text": "rax"}], "previousStatement": null, "nextStatement": null, "tooltip": "Move register to memory location"}
+    },
+    {
+      "type": "movzx",
+      "template": "movzx {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "movzx", "message0": "movzx %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "al"}], "previousStatement": null, "nextStatement": null, "tooltip": "Move with zero extension (pad with zeros)"}
+    },
+    {
+      "type": "movsx",
+      "template": "movsx {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "movsx", "message0": "movsx %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "al"}], "previousStatement": null, "nextStatement": null, "tooltip": "Move with sign extension"}
+    },
+    {
+      "type": "lea",
+      "template": "lea {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "lea", "message0": "lea %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "[rbp+8]"}], "previousStatement": null, "nextStatement": null, "tooltip": "Load effective address (calculate address)"}
+    },
+    {
+      "type": "xchg",
+      "template": "xchg {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "xchg", "message0": "xchg %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "rbx"}], "previousStatement": null, "nextStatement": null, "tooltip": "Exchange values between operands"}
+    },
+    {
+      "type": "mov_eax_imm",
+      "template": "mov eax,{I}",
+      "fields": {"I": "string"},
+      "json": {"type": "mov_eax_imm", "message0": "mov eax, %1", "args0": [{"type": "field_input", "name": "I", "text": "0"}], "previousStatement": null, "nextStatement": null, "tooltip": "Move immediate to eax (clears upper 32 bits)"}
+    },
+    {
+      "type": "mov_al_imm",
+      "template": "mov al,{I}",
+      "fields": {"I": "string"},
+      "json": {"type": "mov_al_imm", "message0": "mov al, %1", "args0": [{"type": "field_input", "name": "I", "text": "0"}], "previousStatement": null, "nextStatement": null, "tooltip": "Move immediate to al (8-bit)"}
+    },
+    {
+      "type": "mov_edi_imm",
+      "template": "mov edi,{I}",
+      "fields": {"I": "string"},
+      "json": {"type": "mov_edi_imm", "message0": "mov edi, %1", "args0": [{"type": "field_input", "name": "I", "text": "1"}], "previousStatement": null, "nextStatement": null, "tooltip": "Move immediate to edi"}
+    },
+    {
+      "type": "mov_esi_imm",
+      "template": "mov esi,{I}",
+      "fields": {"I": "string"},
+      "json": {"type": "mov_esi_imm", "message0": "mov esi, %1", "args0": [{"type": "field_input", "name": "I", "text": "0"}], "previousStatement": null, "nextStatement": null, "tooltip": "Move immediate to esi"}
+    },
+    {
+      "type": "mov_edx_imm",
+      "template": "mov edx,{I}",
+      "fields": {"I": "string"},
+      "json": {"type": "mov_edx_imm", "message0": "mov edx, %1", "args0": [{"type": "field_input", "name": "I", "text": "128"}], "previousStatement": null, "nextStatement": null, "tooltip": "Move immediate to edx"}
+    },
+    {
+      "type": "mov_edi_eax",
+      "template": "mov edi,eax",
+      "fields": {},
+      "json": {"type": "mov_edi_eax", "message0": "mov edi, eax", "args0": [], "previousStatement": null, "nextStatement": null, "tooltip": "Move eax to edi"}
+    },
+    {
+      "type": "mov_rsi_rsp",
+      "template": "mov rsi,rsp",
+      "fields": {},
+      "json": {"type": "mov_rsi_rsp", "message0": "mov rsi, rsp", "args0": [], "previousStatement": null, "nextStatement": null, "tooltip": "Move stack pointer to rsi (buffer pointer)"}
+    },
+    {
+      "type": "mov_rdx_rax",
+      "template": "mov rdx,rax",
+      "fields": {},
+      "json": {"type": "mov_rdx_rax", "message0": "mov rdx, rax", "args0": [], "previousStatement": null, "nextStatement": null, "tooltip": "Move rax to rdx (bytes read)"}
+    },
+    {
+      "type": "mov_al_0",
+      "template": "mov al,0",
+      "fields": {},
+      "json": {"type": "mov_al_0", "message0": "mov al, 0", "args0": [], "previousStatement": null, "nextStatement": null, "tooltip": "Move 0 to al (for read syscall)"}
+    },
+
+    {
+      "type": "push_reg",
+      "template": "push {S}",
+      "fields": {"S": "string"},
+      "json": {"type": "push_reg", "message0": "push %1", "args0": [{"type": "field_input", "name": "S", "text": "rax"}], "previousStatement": null, "nextStatement": null, "tooltip": "Push register value onto stack"}
+    },
+    {
+      "type": "push_imm",
+      "template": "push {I}",
+      "fields": {"I": "string"},
+      "json": {"type": "push_imm", "message0": "push %1", "args0": [{"type": "field_input", "name": "I", "text": "0"}], "previousStatement": null, "nextStatement": null, "tooltip": "Push immediate value onto stack"}
+    },
+    {
+      "type": "pop",
+      "template": "pop {D}",
+      "fields": {"D": "string"},
+      "json": {"type": "pop", "message0": "pop %1", "args0": [{"type": "field_input", "name": "D", "text": "rax"}], "previousStatement": null, "nextStatement": null, "tooltip": "Pop value from stack to register"}
+    },
+    {
+      "type": "enter",
+      "template": "enter {S},{L}",
+      "fields": {"S": "string", "L": "string"},
+      "json": {"type": "enter", "message0": "enter %1, %2", "args0": [{"type": "field_input", "name": "S", "text": "0"}, {"type": "field_input", "name": "L", "text": "0"}], "previousStatement": null, "nextStatement": null, "tooltip": "Create stack frame (stack size, nesting level)"}
+    },
+    {
+      "type": "leave",
+      "template": "leave",
+      "fields": {},
+      "json": {"type": "leave", "message0": "leave", "args0": [], "previousStatement": null, "nextStatement": null, "tooltip": "Destroy current stack frame"}
+    },
+    {
+      "type": "pop_rdi",
+      "template": "pop rdi",
+      "fields": {},
+      "json": {"type": "pop_rdi", "message0": "pop rdi", "args0": [], "previousStatement": null, "nextStatement": null, "tooltip": "Pop stack value into rdi register"}
+    },
+
+    {
+      "type": "add",
+      "template": "add {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "add", "message0": "add %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "1"}], "previousStatement": null, "nextStatement": null, "tooltip": "Add source to destination (D = D + S)"}
+    },
+    {
+      "type": "sub",
+      "template": "sub {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "sub", "message0": "sub %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "1"}], "previousStatement": null, "nextStatement": null, "tooltip": "Subtract source from destination (D = D - S)"}
+    },
+    {
+      "type": "inc",
+      "template": "inc {R}",
+      "fields": {"R": "string"},
+      "json": {"type": "inc", "message0": "inc %1", "args0": [{"type": "field_input", "name": "R", "text": "rax"}], "previousStatement": null, "nextStatement": null, "tooltip": "Increment operand by 1"}
+    },
+    {
+      "type": "dec",
+      "template": "dec {R}",
+      "fields": {"R": "string"},
+      "json": {"type": "dec", "message0": "dec %1", "args0": [{"type": "field_input", "name": "R", "text": "rax"}], "previousStatement": null, "nextStatement": null, "tooltip": "Decrement operand by 1"}
+    },
+    {
+      "type": "neg",
+      "template": "neg {R}",
+      "fields": {"R": "string"},
+      "json": {"type": "neg", "message0": "neg %1", "args0": [{"type": "field_input", "name": "R", "text": "rax"}], "previousStatement": null, "nextStatement": null, "tooltip": "Negate operand (two's complement)"}
+    },
+    {
+      "type": "mul",
+      "template": "mul {S}",
+      "fields": {"S": "string"},
+      "json": {"type": "mul", "message0": "mul %1", "args0": [{"type": "field_input", "name": "S", "text": "rbx"}], "previousStatement": null, "nextStatement": null, "tooltip": "Unsigned multiply (rdx:rax = rax * operand)"}
+    },
+    {
+      "type": "imul",
+      "template": "imul {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "imul", "message0": "imul %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "2"}], "previousStatement": null, "nextStatement": null, "tooltip": "Signed multiply (D = D * S)"}
+    },
+    {
+      "type": "div",
+      "template": "div {S}",
+      "fields": {"S": "string"},
+      "json": {"type": "div", "message0": "div %1", "args0": [{"type": "field_input", "name": "S", "text": "rbx"}], "previousStatement": null, "nextStatement": null, "tooltip": "Unsigned divide (rax = rdx:rax / operand, rdx = remainder)"}
+    },
+    {
+      "type": "idiv",
+      "template": "idiv {S}",
+      "fields": {"S": "string"},
+      "json": {"type": "idiv", "message0": "idiv %1", "args0": [{"type": "field_input", "name": "S", "text": "rbx"}], "previousStatement": null, "nextStatement": null, "tooltip": "Signed divide (rax = rdx:rax / operand, rdx = remainder)"}
+    },
+    {
+      "type": "cqo",
+      "template": "cqo",
+      "fields": {},
+      "json": {"type": "cqo", "message0": "cqo", "args0": [], "previousStatement": null, "nextStatement": null, "tooltip": "Convert quad to octa - sign extend rax to rdx:rax for division"}
+    },
+    {
+      "type": "xor_eax",
+      "template": "xor eax,eax",
+      "fields": {},
+      "json": {"type": "xor_eax", "message0": "xor eax, eax", "args0": [], "previousStatement": null, "nextStatement": null, "tooltip": "Zero out eax register (common idiom)"}
+    },
+    {
+      "type": "xor_edi",
+      "template": "xor edi,edi",
+      "fields": {},
+      "json": {"type": "xor_edi", "message0": "xor edi, edi", "args0": [], "previousStatement": null, "nextStatement": null, "tooltip": "Zero out edi register (common for exit code)"}
+    },
+
+    {
+      "type": "and",
+      "template": "and {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "and", "message0": "and %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "0xff"}], "previousStatement": null, "nextStatement": null, "tooltip": "Bitwise AND (D = D & S)"}
+    },
+    {
+      "type": "or",
+      "template": "or {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "or", "message0": "or %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "0x10"}], "previousStatement": null, "nextStatement": null, "tooltip": "Bitwise OR (D = D | S)"}
+    },
+    {
+      "type": "xor",
+      "template": "xor {D},{S}",
+      "fields": {"D": "string", "S": "string"},
+      "json": {"type": "xor", "message0": "xor %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "S", "text": "rax"}], "previousStatement": null, "nextStatement": null, "tooltip": "Bitwise XOR (D = D ^ S) - common trick: xor reg,reg = zero"}
+    },
+    {
+      "type": "not",
+      "template": "not {R}",
+      "fields": {"R": "string"},
+      "json": {"type": "not", "message0": "not %1", "args0": [{"type": "field_input", "name": "R", "text": "rax"}], "previousStatement": null, "nextStatement": null, "tooltip": "Bitwise NOT (one's complement) - flip all bits"}
+    },
+    {
+      "type": "shl",
+      "template": "shl {D},{C}",
+      "fields": {"D": "string", "C": "string"},
+      "json": {"type": "shl", "message0": "shl %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "C", "text": "1"}], "previousStatement": null, "nextStatement": null, "tooltip": "Shift left logical (multiply by 2^count)"}
+    },
+    {
+      "type": "shr",
+      "template": "shr {D},{C}",
+      "fields": {"D": "string", "C": "string"},
+      "json": {"type": "shr", "message0": "shr %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "C", "text": "1"}], "previousStatement": null, "nextStatement": null, "tooltip": "Shift right logical (unsigned divide by 2^count)"}
+    },
+    {
+      "type": "sal",
+      "template": "sal {D},{C}",
+      "fields": {"D": "string", "C": "string"},
+      "json": {"type": "sal", "message0": "sal %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "C", "text": "1"}], "previousStatement": null, "nextStatement": null, "tooltip": "Shift arithmetic left (same as shl)"}
+    },
+    {
+      "type": "sar",
+      "template": "sar {D},{C}",
+      "fields": {"D": "string", "C": "string"},
+      "json": {"type": "sar", "message0": "sar %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "C", "text": "1"}], "previousStatement": null, "nextStatement": null, "tooltip": "Shift arithmetic right (signed divide by 2^count)"}
+    },
+    {
+      "type": "rol",
+      "template": "rol {D},{C}",
+      "fields": {"D": "string", "C": "string"},
+      "json": {"type": "rol", "message0": "rol %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "C", "text": "1"}], "previousStatement": null, "nextStatement": null, "tooltip": "Rotate left - bits shifted out enter from right"}
+    },
+    {
+      "type": "ror",
+      "template": "ror {D},{C}",
+      "fields": {"D": "string", "C": "string"},
+      "json": {"type": "ror", "message0": "ror %1, %2", "args0": [{"type": "field_input", "name": "D", "text": "rax"}, {"type": "field_input", "name": "C", "text": "1"}], "previousStatement": null, "nextStatement": null, "tooltip": "Rotate right - bits shifted out enter from left"}
+    },
+
+    {
+      "type": ".byte",
+      "template": ".byte {B}",
+      "fields": {"B": "string"},
+      "json": {"type": ".byte", "message0": ".byte %1", "args0": [{"type": "field_input", "name": "B", "text": "0x90"}], "previousStatement": null, "nextStatement": null, "tooltip": "Define byte(s) - 8 bits each"}
+    },
+    {
+      "type": ".word",
+      "template": ".word {W}",
+      "fields": {"W": "string"},
+      "json": {"type": ".word", "message0": ".word %1", "args0": [{"type": "field_input", "name": "W", "text": "0x1234"}], "previousStatement": null, "nextStatement": null, "tooltip": "Define word(s) - 16 bits each"}
+    },
+    {
+      "type": ".long",
+      "template": ".long {L}",
+      "fields": {"L": "string"},
+      "json": {"type": ".long", "message0": ".long %1", "args0": [{"type": "field_input", "name": "L", "text": "0x12345678"}], "previousStatement": null, "nextStatement": null, "tooltip": "Define long(s) - 32 bits each"}
+    },
+    {
+      "type": ".quad",
+      "template": ".quad {Q}",
+      "fields": {"Q": "string"},
+      "json": {"type": ".quad", "message0": ".quad %1", "args0": [{"type": "field_input", "name": "Q", "text": "0x1122334455667788"}], "previousStatement": null, "nextStatement": null, "tooltip": "Define quad(s) - 64 bits each"}
+    },
+    {
+      "type": ".ascii",
+      "template": ".ascii \"{S}\"",
+      "fields": {"S": "string"},
+      "json": {"type": ".ascii", "message0": ".ascii \"%1\"", "args0": [{"type": "field_input", "name": "S", "text": "Hello"}], "previousStatement": null, "nextStatement": null, "tooltip": "Define ASCII string (no null terminator)"}
+    },
+    {
+      "type": "syscall",
+      "template": "syscall",
+      "fields": {},
+      "json": {"type": "syscall", "message0": "syscall", "args0": [], "previousStatement": null, "nextStatement": null, "tooltip": "System call - rax=syscall number, args in rdi,rsi,rdx,r10,r8,r9"}
+    },
+    {
+      "type": "int",
+      "template": "int {N}",
+      "fields": {"N": "string"},
+      "json": {"type": "int", "message0": "int %1", "args0": [{"type": "field_input", "name": "N", "text": "0x80"}], "previousStatement": null, "nextStatement": null, "tooltip": "Software interrupt - legacy system call interface"}
+    }
+  ]
+}

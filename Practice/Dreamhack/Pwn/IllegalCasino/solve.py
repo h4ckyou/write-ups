@@ -39,7 +39,7 @@ def solve():
 
     io.sendlineafter(b":", b"7"*35)
 
-    for _ in range(200):
+    for _ in range(40):
         io.sendlineafter(b">", b"1")
 
     io.interactive()

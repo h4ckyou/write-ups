@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ScrAsm x86-64</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: #0d1117;
+            color: #f0f6fc;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+        header {
+            background: #161b22;
+            padding: 1.5em 2em;
+            color: #58a6ff;
+            font-weight: bold;
+            font-size: 1.2em;
+            border-bottom: 2px solid #30363d;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .main {
+            display: flex;
+            height: calc(100% - 72px);
+        }
+        .editor {
+            flex: 1;
+            border-right: 2px solid #30363d;
+        }
+        #blocklyDiv {
+            width: 100%;
+            height: 100%;
+        }
+        .sidebar {
+            width: 450px;
+            min-width: 400px;
+            background: #161b22;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .panel {
+            padding: 1.2em 1.5em;
+            border-bottom: 1px solid #30363d;
+        }
+        .panel-title {
+            font-size: 0.85em;
+            color: #8b949e;
+            text-transform: uppercase;
+            margin-bottom: 0.8em;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        .code-block {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            padding: 1em;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow: auto;
+            line-height: 1.4;
+            font-size: 0.9em;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .code-block.error {
+            color: #f85149;
+            border-color: #da3633;
+        }
+        .output-block {
+            background: #0d1420;
+            color: #7ee787;
+            padding: 1em;
+            border-radius: 8px;
+            border: 1px solid #238636;
+            margin-top: 0.5em;
+            min-height: 3em;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .registers {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.4em;
+            font-size: 0.85em;
+            margin: 0.5em 0;
+        }
+        .register {
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 0.4em 0.6em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        .register.used {
+            border-color: #58a6ff;
+            background: #1c2128;
+            box-shadow: 0 0 0 1px rgba(88,166,255,0.3);
+        }
+        .register .name {
+            font-weight: 600;
+            color: #f0f6fc;
+        }
+        .register .value {
+            color: #8b949e;
+            font-size: 0.8em;
+        }
+        .register.used .value {
+            color: #58a6ff;
+        }
+        .metrics {
+            display: flex;
+            gap: 1em;
+            margin-top: 0.8em;
+            font-size: 0.85em;
+        }
+        .metric {
+            color: #58a6ff;
+            font-weight: 500;
+        }
+        .metric .value {
+            color: #f0f6fc;
+            margin-left: 0.3em;
+        }
+        #asm-errors {
+            color: #f85149;
+            margin: 0.8em 0;
+            font-size: 0.9em;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5em;
+        }
+        .status-success {
+            background: #28a745;
+        }
+        .status-error {
+            background: #f85149;
+        }
+        .status-warning {
+            background: #ffa500;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <span class="status-indicator" id="status-indicator"></span>
+        x86-64 Scratch Assembly
+    </header>
+    <div class="main">
+        <div class="editor">
+            <div id="blocklyDiv"></div>
+        </div>
+        <div class="sidebar">
+            <div class="panel">
+                <div class="panel-title">Generated Assembly</div>
+                <div id="asm-output" class="code-block">; Drag blocks to generate assembly</div>
+                <div id="asm-errors" style="display:none;"></div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">Complete Program</div>
+                <div id="full-asm-output" class="code-block"></div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">Execution Output</div>
+                <div id="execution-output" class="output-block"></div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">Machine Code Bytecode</div>
+                <div id="hex-bytes-block" class="code-block" style="font-size:0.8em; color:#e3b341;"></div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">Register Values</div>
+                <div class="registers" id="registers"></div>
+                <div class="metrics">
+                    <div class="metric">Instructions: <span class="value" id="instr-count">0</span></div>
+                    <div class="metric">Registers Used: <span class="value" id="reg-count">0</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let allRegisters = ['rax','rbx','rcx','rdx','rsi','rdi','rbp','rsp','r8','r9','r10','r11','r12','r13','r14','r15'];
+        let workspace = null;
+        let debounceTimer = null;
+        let lastXml = '';
+        const DEBOUNCE_MS = 300;
+        function updateStatus(type) {
+            document.getElementById('status-indicator').className = `status-indicator status-${type}`;
+        }
+        function generateClientASM() {
+            const blocks = workspace.getAllBlocks(false);
+            if (!blocks.length) {
+                document.getElementById("asm-output").textContent = "; Drag blocks from the toolbox";
+                document.getElementById("asm-output").className = "code-block";
+                document.getElementById("asm-errors").style.display = "none";
+                updateStatus('warning');
+                return;
+            }
+            let code = [];
+            blocks.filter(b => !b.getParent()).forEach(function walk(blk) {
+                let type = blk.type;
+                let vals = {};
+                for (let f of blk.inputList.flatMap(i => i.fieldRow || [])) {
+                    if (f.name) {
+                        vals[f.name] = f.getValue ? f.getValue() : f.getText();
+                    }
+                }
+                let template = (window.blockTemplates || {})[type];
+                if (template) {
+                    try {
+                        code.push(template.replace(/{([A-Z0-9_]+)}/g, (_, k) => vals[k] || ""));
+                    } catch (e) {
+                        code.push("; Error: " + e);
+                    }
+                } else {
+                    code.push("; Unknown block: " + type);
+                }
+                if (blk.getNextBlock()) {
+                    walk(blk.getNextBlock());
+                }
+            });
+            document.getElementById("asm-output").textContent = code.join("\\n") || "; No assembly generated";
+            document.getElementById("asm-output").className = "code-block";
+        }
+        window.addEventListener("DOMContentLoaded", async () => {
+            try {
+                let data, toolboxDef;
+                try {
+                    const res = await fetch("/instructions");
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    data = await res.json();
+                    if (!data || !data.blocks || !data.categories) {
+                        throw new Error("Invalid data structure from /instructions");
+                    }
+                    window.blockTemplates = Object.fromEntries(data.blocks.map(b => [b.type, b.template]));
+                    Blockly.defineBlocksWithJsonArray(data.blocks.map(b => b.json));
+                    toolboxDef = {
+                        kind: "categoryToolbox",
+                        contents: data.categories.map(cat => ({
+                            kind: "category",
+                            name: cat.name,
+                            colour: cat.colour || "#8b949e",
+                            contents: cat.blocks.map(type => ({
+                                kind: "block",
+                                type: type
+                            }))
+                        }))
+                    };
+                } catch (fetchError) {
+                    console.warn("Failed to load instructions, using fallback toolbox:", fetchError);
+                    toolboxDef = {
+                        kind: "categoryToolbox",
+                        contents: [{
+                            kind: "category",
+                            name: "Basic",
+                            colour: "#58a6ff",
+                            contents: [
+                                {kind: "block", type: "controls_if"},
+                                {kind: "block", type: "logic_compare"},
+                                {kind: "block", type: "text"},
+                                {kind: "block", type: "math_number"}
+                            ]
+                        }]
+                    };
+                    window.blockTemplates = {};
+                }
+                const darkTheme = Blockly.Theme.defineTheme('x86DarkTheme', {
+                    base: Blockly.Themes.Classic,
+                    componentStyles: {
+                        workspaceBackgroundColour: "#0d1117",
+                        toolboxBackgroundColour: "#161b22",
+                        toolboxForegroundColour: "#f0f6fc",
+                        flyoutBackgroundColour: "#21262d",
+                        flyoutForegroundColour: "#f0f6fc",
+                        scrollbarColour: "#30363d",
+                        insertionMarkerColour: "#58a6ff",
+                        insertionMarkerOpacity: 0.6,
+                        markerColour: "#f0f6fc",
+                        cursorColour: "#58a6ff"
+                    }
+                });
+                const blocklyDiv = document.getElementById("blocklyDiv");
+                if (!blocklyDiv) throw new Error("blocklyDiv element not found");
+                workspace = Blockly.inject(blocklyDiv, {
+                    toolbox: toolboxDef,
+                    theme: darkTheme,
+                    grid: {
+                        spacing: 20,
+                        length: 3,
+                        colour: "#30363d",
+                        snap: true
+                    },
+                    sounds: false,
+                    zoom: {
+                        controls: true,
+                        wheel: true,
+                        startScale: 0.9
+                    },
+                    scrollbars: true,
+                    trashcan: true,
+                    renderer: 'geras'
+                });
+                if (!workspace) throw new Error("Failed to initialize Blockly workspace");
+                const regsDiv = document.getElementById('registers');
+                allRegisters.forEach(reg => {
+                    const el = document.createElement('div');
+                    el.className = 'register';
+                    el.id = `reg-${reg}`;
+                    el.innerHTML = `<span class="name">${reg}</span><span class="value" id="reg-${reg}-val">0x0</span>`;
+                    regsDiv.appendChild(el);
+                });
+                processCode();
+                generateClientASM();
+                updateStatus('success');
+                lastXml = getXml();
+                workspace.addChangeListener(() => {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        const xml = getXml();
+                        if (xml !== lastXml) {
+                            lastXml = xml;
+                            processCode();
+                            generateClientASM();
+                        }
+                    }, DEBOUNCE_MS);
+                });
+            } catch (e) {
+                console.error("Initialization error:", e);
+                updateStatus('error');
+            }
+        });
+        function getXml() {
+            const dom = Blockly.Xml.workspaceToDom(workspace);
+            return Blockly.Xml.domToText(dom);
+        }
+        async function processCode() {
+            const xml = getXml();
+            const blocks = workspace.getAllBlocks(false);
+            if (!blocks.length) {
+                clearOutputs();
+                return;
+            }
+            showErrors([]);
+            updateStatus('warning');
+            try {
+                const res = await fetch("/process", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/xml"},
+                    body: xml
+                });
+                const data = await res.json();
+                document.getElementById("asm-output").textContent = data.asm?.trim() || "; No assembly generated";
+                document.getElementById("asm-output").className = data.success ? "code-block" : "code-block error";
+                document.getElementById("full-asm-output").textContent = data.full_asm?.trim() || "; No complete program";
+                showErrors(data.errors);
+                document.getElementById("execution-output").textContent = data.output || "(no output)";
+                document.getElementById("instr-count").textContent = data.instruction_count || 0;
+                document.getElementById("hex-bytes-block").textContent = data.hex_bytes?.trim() || "(no bytecode)";
+                let regs = data.register_values || {};
+                let used = data.registers || [];
+                allRegisters.forEach(reg => {
+                    const valueEl = document.getElementById(`reg-${reg}-val`);
+                    const regEl = document.getElementById(`reg-${reg}`);
+                    valueEl.textContent = regs[reg] || "0x0";
+                    regEl.classList.toggle('used', used.includes(reg));
+                });
+                document.getElementById("reg-count").textContent = used.length;
+                updateStatus(data.success ? 'success' : 'error');
+
+            } catch (e) {
+                showErrors([`Communication error: ${e.message || e}`]);
+                document.getElementById("asm-output").textContent = "; Assembly processing error";
+                document.getElementById("asm-output").className = "code-block error";
+                document.getElementById("execution-output").textContent = `Error: ${e.message || e}`;
+                updateStatus('error');
+            }
+        }
+        function showErrors(errors) {
+            const errDiv = document.getElementById("asm-errors");
+            if (errors && errors.length) {
+                errDiv.style.display = "block";
+                errDiv.innerHTML = "<ul>" + errors.map(e => `<li>${e}</li>`).join("") + "</ul>";
+            } else {
+                errDiv.innerHTML = "";
+                errDiv.style.display = "none";
+            }
+        }
+        function clearOutputs() {
+            document.getElementById("asm-output").textContent = "; Drag blocks to generate assembly";
+            document.getElementById("asm-output").className = "code-block";
+            document.getElementById("asm-errors").style.display = "none";
+            document.getElementById("full-asm-output").textContent = "";
+            document.getElementById("execution-output").textContent = "";
+            document.getElementById("instr-count").textContent = "0";
+            document.getElementById("reg-count").textContent = "0";
+            document.getElementById("hex-bytes-block").textContent = "";
+            allRegisters.forEach(reg => {
+                document.getElementById(`reg-${reg}-val`).textContent = "0x0";
+                document.getElementById(`reg-${reg}`).classList.remove('used');
+            });
+            updateStatus('warning');
+        }
+    </script>
+</body>
+</html>
